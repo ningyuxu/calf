@@ -1,0 +1,12 @@
+bert_models:
+  # - name: "bert-base-cased"
+  # - name: "bert-base-uncased"
+  # - name: "bert-large-cased"
+  # - name: "bert-large-uncased"
+  - name: "bert-base-multilingual-cased"
+
+ud_corpora:
+  - {lang: "en", genre: "EWT", split: "train"}
+  - {lang: "zh", genre: "GSDSimp", split: "train"}
+
+batch_size: 1

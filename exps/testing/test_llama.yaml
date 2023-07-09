@@ -1,0 +1,9 @@
+llama_models:
+  - name: "openlm-research/open_llama_3b"
+  # - name: "openlm-research/open_llama_7b"
+
+ud_corpora:
+  - {lang: "en", genre: "EWT", split: "train"}
+  - {lang: "zh", genre: "GSDSimp", split: "train"}
+
+batch_size: 1

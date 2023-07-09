@@ -1,0 +1,56 @@
+model: {name: "EleutherAI/pythia-70m"}
+
+corpus: {lang: "fr", genre: "GDS", split: "dev"}
+# corpus: {lang: "en", genre: "EWT", split: "dev"}
+
+ud_corpora:
+  - {lang: "en", genre: "EWT", split: "train"}
+  - {lang: "zh", genre: "GSDSimp", split: "train"}
+
+sst2_corpora: [
+  {split: "train"},
+  {split: "dev"},
+  {split: "test"},
+]
+gpt_models: [
+  {name: "gpt2"},
+  {name: "gpt2-medium"},
+  {name: "gpt2-large"},
+  {name: "gpt2-xl"},
+  {name: "ai-forever/mGPT"},
+]
+xglm_models: [
+  {name: "facebook/xglm-564M"},
+  {name: "facebook/xglm-1.7B"},
+  {name: "facebook/xglm-2.9B"},
+  {name: "facebook/xglm-4.5B"},
+  {name: "facebook/xglm-7.5B"},
+]
+cerebras_models: [
+  {name: "cerebras/Cerebras-GPT-111M"},
+  {name: "cerebras/Cerebras-GPT-256M"},
+  {name: "cerebras/Cerebras-GPT-590M"},
+  {name: "cerebras/Cerebras-GPT-1.3B"},
+  {name: "cerebras/Cerebras-GPT-2.7B"},
+  {name: "cerebras/Cerebras-GPT-6.7B"},
+  # {name: "cerebras/Cerebras-GPT-13B"},
+]
+dolly_models: [
+  {name: "databricks/dolly-v2-3b"},
+  {name: "databricks/dolly-v2-7b"},
+  # {name: "databricks/dolly-v2-12b"},
+]
+opt_models: [
+  {name: "facebook/opt-125m"},
+  {name: "facebook/opt-350m"},
+  {name: "facebook/opt-1.3b"},
+  {name: "facebook/opt-2.7b"},
+  {name: "facebook/opt-6.7b"},
+  # {name: "facebook/opt-13b"},
+]
+mpt_models: [
+  {name: "mosaicml/mpt-7b"},
+  {name: "mosaicml/mpt-7b-instruct"},
+  {name: "mosaicml/mpt-7b-chat"},
+  {name: "mosaicml/mpt-7b-storywriter"},
+]

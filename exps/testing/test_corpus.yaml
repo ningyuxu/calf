@@ -1,0 +1,6 @@
+reload: False
+
+ud_corpora:
+  - {lang: "en", genre: "EWT", split: "train"}
+  - {lang: "zh", genre: "GSDSimp", split: "train"}
+

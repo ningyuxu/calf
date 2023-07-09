@@ -1,0 +1,8 @@
+baichuan_models:
+  - name: "baichuan-inc/Baichuan-7B"
+
+ud_corpora:
+  - {lang: "en", genre: "EWT", split: "train"}
+  - {lang: "zh", genre: "GSDSimp", split: "train"}
+
+batch_size: 1
