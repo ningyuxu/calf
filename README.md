@@ -13,6 +13,25 @@ Our primary objective is to enhance the efficiency of implementing deep learning
 
 ## Usage
 
+### Changelog
+
+[2023-07-19] **NEW**: Added support for zero-shot cross-lingual dependency parsing by Multilingual BERT (mBERT, [`bert-base-multilingual-cased`](https://huggingface.co/bert-base-multilingual-cased)).
+
+- Code is available at [`exps/cl_syntactic_diff_mbert`](./exps/cl_syntactic_diff_mbert).
+
+- Dataset by default is Universal Dependencies (UD) [v2.10](https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-4758).
+
+- Specify the experiments by the configuration (`yaml`) files, which can be overridden by using command-line arguments.
+  - Default settings have been specified in the main config [`exps/cl_syntactic_diff_mbert/config.yaml`](./exps/cl_syntactic_diff_mbert/config.yaml) and the config file for training the parser [`exps/cl_syntactic_diff_mbert/parser_cfg.yaml`](./exps/cl_syntactic_diff_mbert/parser_cfg.yaml).
+  - Set the source language (`src_lang`) and target languages (`tgt_langs`) in [`exps/cl_syntactic_diff_mbert/config.yaml`](./exps/cl_syntactic_diff_mbert/config.yaml)
+
+- Fine-tune mBERT for dependency parsing by running
+
+        python -m exps.cl_syntactic_diff_mbert.run parser --mode=train
+
+- Test the mBERT fine-tuned on a source language by running
+
+        python -m exps.cl_syntactic_diff_mbert.run parser --mode=test
 
 ### Currently supported features and functionality
 
