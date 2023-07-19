@@ -82,7 +82,7 @@ model:
     parser_use_predict_pos: true
     parser_predict_rel_label: true
     parser_dropout: 0.33
-    ignore_pos_punct: false
+    ignore_pos_punct: true
 
 
 trainer:
