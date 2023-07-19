@@ -100,6 +100,17 @@ def parse_config(cfg: DictConfig = None,
             config.merge_with(OmegaConf.load(str(file)))
     if args is not None:
         config.merge_with(args)
+    # Assign variables their default values if they are not specified in the configuration or arguments
+    config.nproc = config.get("nproc", 0)
+    config.gid = config.get("gid", None)
+    config.gpu_mem_threshold = config.get("gpu_mem_threshold", 9216)
+    config.seed = config.get("seed", 25)
+    config.threads = config.get("threads", 16)
+    config.verbose = config.get("verbose", True)
+    config.log_to_file = config.get("log_to_file", False)
+    config.checkpoint = config.get("checkpoint", False)
+    config.use_available_gpu = config.get("use_available_gpu", False)
+    config.log_master_only = config.get("log_master_only", True)
     return config
 
 
@@ -130,16 +141,6 @@ def run_experiment(experiment: str,
                    command: str,
                    config_path: str,
                    config_file: str,
-                   nproc: int = 0,
-                   gid: int = None,
-                   gpu_mem_threshold: int = 9216,
-                   seed: int = 25,
-                   threads: int = 16,
-                   verbose: bool = True,
-                   log_to_file: bool = False,
-                   checkpoint: bool = False,
-                   use_available_gpu: bool = False,
-                   log_master_only: bool = True,
                    callback: Callable = None,
                    **kwargs) -> None:
     # parse configuration

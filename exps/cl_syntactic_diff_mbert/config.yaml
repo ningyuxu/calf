@@ -1,0 +1,68 @@
+exp_name: "mbert-dp-zs"
+mode: "train"  # "train" or "test"
+src_lang: "en"
+tgt_langs: [
+  "ar", "bg", "ca", "cs", "de", "en", "el", "es", "et", "fa", "fi", "fr", "he", "hi", "hu",
+  "it", "ja", "ko", "lv", "nl", "pl", "pt", "ro", "ru", "ta", "tr", "ur", "vi", "zh",
+]
+
+world_size: 1
+gpu_mem_threshold: 2048
+nproc: 1
+use_available_gpu: true
+
+log_to_file: false
+
+pad_head_id: -1
+pad_label_id: -1
+
+corpus:
+  upos_values: &upos_values [
+    "ADJ", "ADP", "ADV", "AUX", "CCONJ", "DET", "INTJ", "NOUN", "NUM", "PART", "PRON", "PROPN",
+    "PUNCT", "SCONJ", "SYM", "VERB", "X"
+  ]
+  deprel_values: &deprel_values [
+    "acl", "advcl", "advmod", "amod", "appos", "aux", "case", "cc", "ccomp", "clf", "compound",
+    "conj", "cop", "csubj", "dep", "det", "discourse", "dislocated", "expl", "fixed", "flat", "goeswith",
+    "iobj", "list", "mark", "nmod", "nsubj", "nummod", "obj", "obl", "orphan", "parataxis", "punct",
+    "reparandum", "root", "vocative", "xcomp"
+  ]
+
+all_langs:
+  fields: &ud_fields [ "lang", "genre", "split", "seqid", "form", "upos", "head", "deprel" ]
+  criteria:
+    langs:  [
+      "ar", "bg", "ca", "cs", "de", "el", "en", "es", "et", "fa", "fi", "fr", "he", "hi", "hu",
+      "it", "ja", "ko", "lv", "nl", "pl", "pt", "ro", "ru", "ta", "tr", "ur", "vi", "zh",
+    ]
+    genres: &genres {
+      "ar": [ "PADT" ],
+      "bg": [ "BTB" ],
+      "ca": [ "AnCora" ],
+      "cs": [ "PDT" ],
+      "de": [ "GSD" ],
+      "el": [ "GDT" ],
+      "en": [ "EWT" ],
+      "es": [ "GSD" ],
+      "et": [ "EDT" ],
+      "fa": [ "PerDT" ],
+      "fi": [ "TDT" ],
+      "fr": [ "GSD" ],
+      "he": [ "HTB" ],
+      "hi": [ "HDTB" ],
+      "hu": [ "Szeged" ],
+      "it": [ "VIT" ],
+      "ja": [ "GSD" ],
+      "ko": [ "Kaist" ],
+      "lv": [ "LVTB" ],
+      "nl": [ "Alpino" ],
+      "pl": [ "PDB" ],
+      "pt": [ "GSD" ],
+      "ro": [ "RRT" ],
+      "ru": [ "GSD" ],
+      "ta": [ "TTB" ],
+      "tr": [ "BOUN" ],
+      "ur": [ "UDTB" ],
+      "vi": [ "VTB" ],
+      "zh": [ "GSDSimp" ],
+    }

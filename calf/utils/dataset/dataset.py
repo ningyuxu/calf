@@ -43,11 +43,11 @@ class Dataset(torch.utils.data.Dataset):  # noqa
     def __getitem__(self, index):
         if self.cache:  # meta data
             return debinarize(str(self.cache_file), self.data[index])
-        else:  # actural data
+        else:  # actual data
             return self.data[index]
 
     @property
-    def data(self):  # either actural data (not cached) or meta data (cached)
+    def data(self):  # either actual data (not cached) or meta data (cached)
         if self._data is None:
             self._data = self.load()
         return self._data
@@ -64,7 +64,7 @@ class Dataset(torch.utils.data.Dataset):  # noqa
             if not self.reload and self.cache_file.is_file():  # already cached
                 data = debinarize(str(self.cache_file), meta=True)["data"]
             else:  # cache and return
-                logger.info(f"Seeking to cache the data to {str(self.cache_file)} first")
+                logger.info(f"Attempting to cache the data in {str(self.cache_file)} initially")
                 data = []
                 if is_master():
                     data = self.transform.load(corpus=self.corpus)

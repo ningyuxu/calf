@@ -1,0 +1,151 @@
+exp_name: "mbert-dp-zs"
+
+pad_head_id: -1
+pad_label_id: -1
+
+corpus:
+  upos_values: &upos_values [
+    "ADJ", "ADP", "ADV", "AUX", "CCONJ", "DET", "INTJ", "NOUN", "NUM", "PART", "PRON", "PROPN",
+    "PUNCT", "SCONJ", "SYM", "VERB", "X"
+  ]
+  deprel_values: &deprel_values [
+    "acl", "advcl", "advmod", "amod", "appos", "aux", "case", "cc", "ccomp", "clf", "compound",
+    "conj", "cop", "csubj", "dep", "det", "discourse", "dislocated", "expl", "fixed", "flat", "goeswith",
+    "iobj", "list", "mark", "nmod", "nsubj", "nummod", "obj", "obl", "orphan", "parataxis", "punct",
+    "reparandum", "root", "vocative", "xcomp"
+  ]
+
+transform:
+  max_len: 128
+
+all_langs:
+  fields: &ud_fields [ "lang", "genre", "split", "seqid", "form", "upos", "head", "deprel" ]
+  criteria:
+    langs:  [
+      "ar", "bg", "ca", "cs", "de", "el", "en", "es", "et", "fa", "fi", "fr", "he", "hi", "hu",
+      "it", "ja", "ko", "lv", "nl", "pl", "pt", "ro", "ru", "ta", "tr", "ur", "vi", "zh",
+    ]
+    genres: &genres {
+      "ar": [ "PADT" ],
+      "bg": [ "BTB" ],
+      "ca": [ "AnCora" ],
+      "cs": [ "PDT" ],
+      "de": [ "GSD" ],
+      "el": [ "GDT" ],
+      "en": [ "EWT" ],
+      "es": [ "GSD" ],
+      "et": [ "EDT" ],
+      "fa": [ "PerDT" ],
+      "fi": [ "TDT" ],
+      "fr": [ "GSD" ],
+      "he": [ "HTB" ],
+      "hi": [ "HDTB" ],
+      "hu": [ "Szeged" ],
+      "it": [ "VIT" ],
+      "ja": [ "GSD" ],
+      "ko": [ "Kaist" ],
+      "lv": [ "LVTB" ],
+      "nl": [ "Alpino" ],
+      "pl": [ "PDB" ],
+      "pt": [ "GSD" ],
+      "ro": [ "RRT" ],
+      "ru": [ "GSD" ],
+      "ta": [ "TTB" ],
+      "tr": [ "BOUN" ],
+      "ur": [ "UDTB" ],
+      "vi": [ "VTB" ],
+      "zh": [ "GSDSimp" ],
+    }
+
+
+model:
+  name: "Multilingual BERT for Dependency Parsing"
+  encoder:
+    name: "bert-base-multilingual-cased"
+    finetune: &finetune true
+    max_seq_len: 128
+    freeze_layer: -1
+    n_layers: 12
+    embedding:
+      layer: 12
+
+  task:
+    name: "dependency_parsing"
+    upos_values: *upos_values
+    deprel_values: *deprel_values
+    embedding_dim: 768
+    parser_pos_dim: 100
+    parser_rel_dim: 128
+    parser_arc_dim: 512
+    parser_use_pos: false
+    parser_predict_pos: true
+    parser_use_predict_pos: true
+    parser_predict_rel_label: true
+    parser_dropout: 0.33
+    ignore_pos_punct: false
+
+
+trainer:
+  name: "dependency_parsing"
+  dist: false
+  launcher: "pytorch"
+
+  train_encoder: *finetune
+
+  # output
+  log_to_file: true
+  train_log_file: "train.log"
+  log_loss: true
+  loss_log_file: "loss.log"
+  log_k_times: 10
+  save_model_each_k_epochs: 0
+  checkpoint: false
+  save_final_model: true
+
+  # batch size
+  mini_batch_size: 8
+  eval_batch_size: 8
+
+  # learning rate
+  learning_rate: &lr 5.0e-5  # 5.0e-4
+  min_learning_rate: 1.0e-7
+
+  # epoch
+  max_epochs: 5
+
+  # training
+  train_with_dev: false
+  shuffle: true
+
+  # evaluating
+  eval_on_train_fraction: 0.0  # if set to "dev", means use dev split size
+  eval_on_train_shuffle: false
+  main_evaluation_metric: "accuracy"
+  use_final_model_for_eval: false
+
+  # anneal
+  anneal_with_restarts: false
+  anneal_with_prestarts: false
+  anneal_against_dev_loss: false
+
+  # data
+  num_workers: 0
+
+  # optimizer
+  optimizer:
+    name: "Adam"
+    lr: *lr
+    weight_decay: 0.0
+    momentum: 0.9
+    beta1: 0.9
+    beta2: 0.999
+
+  # scheduler
+  scheduler:
+    name: "LinearSchedulerWithWarmup"  # "OneCycleLR", "LinearSchedulerWithWarmup"
+    cycle_momentum: false
+    warmup_fraction: -1  # 0.1
+    anneal_factor: 0.5
+    patience: 3
+    initial_extra_patience: 0
+

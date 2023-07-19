@@ -40,7 +40,7 @@ class UDTreebankCorpus(Corpus):
         super().__init__(reload=reload, name=self.corpus, lang=lang, genre=genre, split=split)
         self.url = url
         self.lang_code = lang
-        self.lang_name = ISO639.from_part1(self.lang_code).name
+        self.lang_name = ISO639.match(self.lang_code).name
         self.genre = genre
         self.split = split
         self.corpus_file_path = self.corpus_path / f"UD_{self.lang_name}-{self.genre}"

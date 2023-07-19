@@ -12,12 +12,13 @@ class UDTreebankTransform(Transform):
         super().__init__(name="doword_ud_transform")
 
         self.tokenizer = tokenizer
-        special_tokens = {"pad_token": tokenizer.eos_token}
-        self.tokenizer.add_special_tokens(special_tokens)
+        if not self.tokenizer.pad_token_id:
+            special_tokens = {"pad_token": tokenizer.eos_token}
+            self.tokenizer.add_special_tokens(special_tokens)
 
     def load(self, corpus: Corpus) -> Iterable[Dict]:
         fields = corpus.fields
-        for data in corpus.load():
+        for data in corpus.data:
             text = dict(zip(fields, data))
             yield text
 
@@ -46,7 +47,7 @@ class UDTreebankTransform(Transform):
                                  padding_value=self.tokenizer.pad_token_id,
                                  padding_side="left")
         batch["attention_mask"] = pad(tensors=batch["attention_mask"],
-                                      padding_value=self.tokenizer.pad_token_id,
+                                      padding_value=0,
                                       padding_side="left")
         batch["special_token_mask"] = pad(tensors=batch["special_token_mask"],
                                           padding_value=1,
