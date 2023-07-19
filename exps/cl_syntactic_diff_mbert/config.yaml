@@ -1,14 +1,13 @@
 exp_name: "mbert-dp-zs"
 mode: "train"  # "train" or "test"
-src_lang: "en"
+src_lang: "en"  # the source language used for fine-tuning
 tgt_langs: [
   "ar", "bg", "ca", "cs", "de", "en", "el", "es", "et", "fa", "fi", "fr", "he", "hi", "hu",
   "it", "ja", "ko", "lv", "nl", "pl", "pt", "ro", "ru", "ta", "tr", "ur", "vi", "zh",
-]
+]  # the target languages used for testing
 
-world_size: 1
-gpu_mem_threshold: 2048
-nproc: 1
+gpu_mem_threshold: 4096
+nproc: 1  # number of gpus to be used, use `cpu` if set to 0
 use_available_gpu: true
 
 log_to_file: false

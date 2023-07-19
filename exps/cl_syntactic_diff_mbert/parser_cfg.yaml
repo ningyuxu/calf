@@ -62,12 +62,12 @@ model:
   name: "Multilingual BERT for Dependency Parsing"
   encoder:
     name: "bert-base-multilingual-cased"
-    finetune: &finetune true
+    finetune: &finetune true  # whether to fine-tune the parameters of the pretrained model
     max_seq_len: 128
     freeze_layer: -1
     n_layers: 12
     embedding:
-      layer: 12
+      layer: 12  # which layer of mBERT to be used, ranging from 0 to 12
 
   task:
     name: "dependency_parsing"
@@ -107,7 +107,7 @@ trainer:
   eval_batch_size: 8
 
   # learning rate
-  learning_rate: &lr 5.0e-5  # 5.0e-4
+  learning_rate: &lr 5.0e-5
   min_learning_rate: 1.0e-7
 
   # epoch
