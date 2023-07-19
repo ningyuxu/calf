@@ -15,7 +15,7 @@ Our primary objective is to enhance the efficiency of implementing deep learning
 
 ### Changelog
 
-[2023-07-19] **NEW**: Added support for zero-shot cross-lingual dependency parsing by Multilingual BERT (mBERT, [`bert-base-multilingual-cased`](https://huggingface.co/bert-base-multilingual-cased)).
+[2023-07-19] **NEW**: Added support for zero-shot cross-lingual dependency parsing with Multilingual BERT (mBERT, [`bert-base-multilingual-cased`](https://huggingface.co/bert-base-multilingual-cased)).
 
 - Code is available at [`exps/cl_syntactic_diff_mbert`](./exps/cl_syntactic_diff_mbert).
 
