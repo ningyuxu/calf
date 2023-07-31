@@ -1,6 +1,7 @@
 from tqdm import tqdm
 from typing import Tuple, Dict, Union
 from pathlib import Path
+from omegaconf import DictConfig
 
 import torch
 import torch.nn as nn
@@ -146,6 +147,9 @@ class MBertDPModel(nn.Module):
         )
 
         return accuracy_result, loss_result
+
+    def predict(self, corpus_params):
+        self.encoder.predict(corpus_params=corpus_params)
 
     def save(self, model_file: Union[str, Path]) -> None:
         model_state = self._get_state_dict()

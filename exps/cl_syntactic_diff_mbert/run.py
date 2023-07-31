@@ -13,6 +13,11 @@ def parser(cfg: DictConfig):
         test_parser(cfg=cfg, src_lang=cfg.src_lang, tgt_langs=cfg.tgt_langs)
 
 
+def probe(cfg: DictConfig):
+    from .probe import probing
+    probing(cfg=cfg, lang=cfg.probe_lang)
+
+
 def start(cfg: DictConfig):
     getattr(sys.modules[__name__], cfg.command)(cfg)
 

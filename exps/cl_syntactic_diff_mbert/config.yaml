@@ -1,10 +1,12 @@
-exp_name: "mbert-dp-zs"
+# exp_name: "mbert-dp-zs"
 mode: "train"  # "train" or "test"
 src_lang: "en"  # the source language used for fine-tuning
 tgt_langs: [
   "ar", "bg", "ca", "cs", "de", "en", "el", "es", "et", "fa", "fi", "fr", "he", "hi", "hu",
   "it", "ja", "ko", "lv", "nl", "pl", "pt", "ro", "ru", "ta", "tr", "ur", "vi", "zh",
-]  # the target languages used for testing
+]  # the target languages used for testing the mBERT fine-tuned on the source language
+
+probe_lang: "en"  # the language used for the probing experiment
 
 gpu_mem_threshold: 4096
 nproc: 1  # number of gpus to be used, use `cpu` if set to 0

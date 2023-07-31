@@ -30,7 +30,23 @@ Our primary objective is to enhance the efficiency of implementing deep learning
 
 ### Experiments
 
-[2023-07-19] **NEW**: Zero-shot cross-lingual dependency parsing with Multilingual BERT (mBERT, [`bert-base-multilingual-cased`](https://huggingface.co/bert-base-multilingual-cased)).
+[2023-07-31] **NEW**: Probing Multilingual BERT (mBERT, [`bert-base-multilingual-cased`](https://huggingface.co/bert-base-multilingual-cased)) for grammatical relations.
+
+- Code is available at [`exps/cl_syntactic_diff_mbert`](./exps/cl_syntactic_diff_mbert).
+
+- Dataset by default is Universal Dependencies (UD) [v2.10](https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-4758).
+
+- Specify the experiments by the configuration (`yaml`) files, which can be overridden by using command-line arguments.
+  - Default settings have been specified in the main config [`exps/cl_syntactic_diff_mbert/config.yaml`](./exps/cl_syntactic_diff_mbert/config.yaml) and the config file for the probing experiment [`exps/cl_syntactic_diff_mbert/probe_cfg.yaml`](./exps/cl_syntactic_diff_mbert/probe_cfg.yaml).
+  - Set the language for probing (`probe_lang`) in [`exps/cl_syntactic_diff_mbert/config.yaml`](./exps/cl_syntactic_diff_mbert/config.yaml), together with the corpora needed for probing (`corpora`) in [`exps/cl_syntactic_diff_mbert/probe_cfg.yaml`](./exps/cl_syntactic_diff_mbert/probe_cfg.yaml). The default language is set to English.
+  - Set the layer to be probed in [`exps/cl_syntactic_diff_mbert/probe_cfg.yaml`](./exps/cl_syntactic_diff_mbert/probe_cfg.yaml). The default is set to layer 7.
+
+- Probe mBERT layers by running
+      
+      python -m exps.cl_syntactic_diff_mbert.run probe
+
+
+[2023-07-19] **NEW**: Zero-shot cross-lingual dependency parsing with Multilingual BERT.
 
 - Code is available at [`exps/cl_syntactic_diff_mbert`](./exps/cl_syntactic_diff_mbert).
 

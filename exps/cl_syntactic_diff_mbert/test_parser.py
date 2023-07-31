@@ -3,7 +3,7 @@ from omegaconf import DictConfig
 
 import json
 
-from calf import parse_config, device, CHECKPOINT, OUTPUT, LOG, CACHE, logger
+from calf import parse_config, device, CHECKPOINT, LOG, logger
 from calf.utils.log import log_line
 from calf.utils.corpus import Corpus, UDTreebankCorpus
 from calf.utils.dataset import Dataset, build_dataloader
@@ -40,11 +40,16 @@ def test_parser(cfg: DictConfig, tgt_langs: list, src_lang: str = "en"):
     )
     model = MBertDPModel(cfg.model).to(device)
     checkpoint_path = CHECKPOINT / cfg.exp_name / src_lang
+
+    # Fine-tune mBERT for dependency parsing if checkpoint does not exist
     if not (checkpoint_path / "best_model.pt").is_file():
-        logger.info(f"Cannot find saved checkpoint of mbert_for_dependency_parsing. Start Training on {src_lang}.")
+        log_line(logger=logger)
+        logger.info(f"Cannot find saved checkpoint of mbert_for_dependency_parsing. \nStart Training on {src_lang}.")
+        log_line(logger=logger)
         train_parser(cfg=cfg, lang=src_lang)
-    else:
-        model.load_state_dict(model.load(checkpoint_path / "best_model.pt").state_dict())
+
+    # Load the model fine-tuned for dependency parsing
+    model.load_state_dict(model.load(checkpoint_path / "best_model.pt").state_dict())
 
     model.eval()
     tokenizer = model.encoder.tokenizer
@@ -52,6 +57,10 @@ def test_parser(cfg: DictConfig, tgt_langs: list, src_lang: str = "en"):
 
     log_path = LOG / cfg.exp_name / f"{src_lang}_zs"
     log_path.mkdir(exist_ok=True)
+
+    log_line(logger=logger)
+    logger.info(f"Start Testing [src_lang = {src_lang}, tgt_langs = {', '.join(tgt_langs)}].")
+    log_line(logger=logger)
 
     for tgt_lang in tgt_langs:
         result_dict = dict()

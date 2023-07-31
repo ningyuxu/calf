@@ -1,6 +1,5 @@
 from typing import Dict, List
 import h5py
-from pathlib import Path
 
 import numpy as np
 import torch
@@ -11,7 +10,7 @@ from calf.utils.log import progress_bar
 from calf.utils.corpus import UDTreebankCorpus
 from calf.utils.dataset import build_dataloader
 from calf.modules import HuggingfaceConfig, HuggingfaceModel, HuggingfaceTokenizer
-from calf import device, OUTPUT
+from calf import device, OUTPUT, logger
 
 from exps.cl_syntactic_diff_mbert.ud_transform import UDTreebankTransform
 
@@ -138,44 +137,51 @@ class MBertEncoder(nn.Module):
 
         return batch_with_embedding
 
-    def predict(self, cfg):
-        for corpus_params in cfg.corpora:
-            ud_corpus = UDTreebankCorpus(lang=corpus_params.lang,
-                                         genre=corpus_params.genre,
-                                         split=corpus_params.split)
-            transform = UDTreebankTransform(tokenizer=self.tokenizer)
-            dataloader, _, _ = build_dataloader(corpus=ud_corpus,
-                                                transform=transform,
-                                                cache=True,
-                                                batch_size=1)
-            hdf5_file = get_embedding_file(cfg.model, corpus_params)
-            if Path(hdf5_file).is_file():
-                continue
-            sid = 0
-            for batch in progress_bar(dataloader,
-                                      desc=f'{cfg.model.name}'
-                                           f'-{corpus_params["lang"]}'
-                                           f'-{corpus_params["genre"]}'
-                                           f'-{corpus_params["split"]}'):
-                with torch.no_grad():
-                    output = self.pretrained_model(batch["input_ids"], batch["attention_mask"])
-                    # raw_embeddings = raw_embeddings[0].cpu().detach().numpy()
-                    hidden_states = torch.stack(output["hidden_states"])
-                    raw_embeddings = hidden_states[self.encoder_cfg.embedding.layer]
-                    right_ids = [span[0] for span in batch["segment_spans"][0]]
-                    raw_embeddings = raw_embeddings[right_ids]
-                upos_ids = get_label_ids(upos_vocab, batch["upos"][0])
-                heads = torch.tensor(batch["head"][0]).long()
-                deprel_ids = get_label_ids(deprel_vocab, batch["deprel"][0])
-                result = {"sid": sid,
-                          "forms": batch["form"][0],
-                          "upos_ids": upos_ids,
-                          "heads": heads,
-                          "deprel_ids": deprel_ids,
-                          "embeddings": raw_embeddings}
-                sid += 1
-                with h5py.File(hdf5_file, 'a') as f:
-                    save_as_hdf5(result, f)
+    def predict(self, corpus_params):
+        # for corpus_params in cfg.corpora:
+        ud_corpus = UDTreebankCorpus(lang=corpus_params.lang,
+                                     genre=corpus_params.genre,
+                                     split=corpus_params.split)
+        transform = UDTreebankTransform(tokenizer=self.tokenizer)
+        dataloader, _, _ = build_dataloader(corpus=ud_corpus,
+                                            transform=transform,
+                                            cache=True,
+                                            batch_size=self.encoder_cfg.predict_batch_size)
+        hdf5_file = get_embedding_file(self.encoder_cfg, corpus_params)
+        # if Path(hdf5_file).is_file():
+        #     continue
+        sid = 0
+        for batch in progress_bar(
+                logger=logger,
+                iterator=dataloader,
+                desc=f'{self.encoder_cfg.name}-'
+                     f'{corpus_params["lang"]}-'
+                     f'{corpus_params["genre"]}-'
+                     f'{corpus_params["split"]}'
+        ):
+            with torch.no_grad():
+                output = self.pretrained_model.backend(batch["input_ids"], batch["attention_mask"])
+                hidden_states = torch.stack(output["hidden_states"])
+                hidden_states = torch.permute(hidden_states, (1, 0, 2, 3))
+                for idx in range(len(batch["num_tokens"])):
+                    length_s = batch["num_tokens"][idx]
+                    tokens_s = batch["form"][idx][:length_s]
+                    token_ids_s = batch["input_ids"][idx][:length_s]
+                    postag_ids_s = batch["postag_ids"][idx][:length_s]
+                    head_ids_s = batch["head_ids"][idx][:length_s]
+                    deprel_ids_s = batch["deprel_ids"][idx][:length_s]
+                    hidden_states_s = hidden_states[idx][:, :length_s]
+                    sid += 1
+                    result = {"seqid": sid,
+                              "length": length_s,
+                              "tokens": tokens_s,
+                              "token_ids": token_ids_s,
+                              "postag_ids": postag_ids_s,
+                              "head_ids": head_ids_s,
+                              "deprel_ids": deprel_ids_s,
+                              "embeddings": hidden_states_s}
+                    with h5py.File(hdf5_file, 'a') as f:
+                        save_as_hdf5(result, f)
 
 
 def freeze_module(module: torch.nn.Module, freeze=True):
