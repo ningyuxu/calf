@@ -85,3 +85,11 @@ Our primary objective is to enhance the efficiency of implementing deep learning
 ## Acknowledgement
 
 This repository is partly inspired by [Flair](https://github.com/flairNLP/flair) and [SuPar](https://github.com/yzhangcs/parser).
+
+We use the [public source code](https://github.com/microsoft/otdd) of Alvarez-Melis and Fusi (2020) to compute the Optimal Transport Dataset Distance (OTDD) for our experiments in Xu et al. (2022).
+
+## References
+
+Alvarez-Melis, D., & Fusi, N. (2020). [Geometric Dataset Distances via Optimal Transport.](https://proceedings.neurips.cc/paper/2020/hash/f52a7b2610fb4d3f74b4106fb80b233d-Abstract.html) _Advances in Neural Information Processing Systems, 33_, 21428–21439. 
+
+Xu, N., Gui, T., Ma, R., Zhang, Q., Ye, J., Zhang, M., & Huang, X. J. (2022). [Cross-Linguistic Syntactic Difference in Multilingual BERT: How Good is It and How Does It Affect Transfer?.](https://aclanthology.org/2022.emnlp-main.552/) In _Proceedings of the 2022 Conference on Empirical Methods in Natural Language Processing_ (pp. 8073-8092).

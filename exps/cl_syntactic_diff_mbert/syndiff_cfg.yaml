@@ -11,8 +11,8 @@ delete_hdf5_after_probing: true  # whether to delete the `hdf5_file` where embed
 
 maxsize: 5000
 maxsamples: 5000
-ot_entreg: 1.0e-2
-inner_ot_entreg: 1.0e-2
+ot_entreg: 1.0e-1
+inner_ot_entreg: 1.0e-1
 
 corpus:
   upos_values: &upos_values [
