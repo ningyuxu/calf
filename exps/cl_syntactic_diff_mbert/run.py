@@ -18,6 +18,11 @@ def probe(cfg: DictConfig):
     probing(cfg=cfg, lang=cfg.probe_lang)
 
 
+def compute_syndiff(cfg: DictConfig):
+    from .compute_syndiff import compute_dist
+    compute_dist(cfg=cfg, src_lang=cfg.lang1, tgt_lang=cfg.lang2)
+
+
 def start(cfg: DictConfig):
     getattr(sys.modules[__name__], cfg.command)(cfg)
 

@@ -30,7 +30,24 @@ Our primary objective is to enhance the efficiency of implementing deep learning
 
 ### Experiments
 
-[2023-07-31] **NEW**: Probing Multilingual BERT (mBERT, [`bert-base-multilingual-cased`](https://huggingface.co/bert-base-multilingual-cased)) for grammatical relations.
+[2023-10-19] **NEW**: Measuring the syntactic difference between languages encoded in Multilingual BERT (mBERT, [`bert-base-multilingual-cased`](https://huggingface.co/bert-base-multilingual-cased)).
+
+- Code is available at [`exps/cl_syntactic_diff_mbert`](./exps/cl_syntactic_diff_mbert).
+
+- Dataset by default is Universal Dependencies (UD) [v2.10](https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-4758).
+
+- Specify the experiments by the configuration (`yaml`) files, which can be overridden by using command-line arguments.
+  - Default settings have been specified in the main config [`exps/cl_syntactic_diff_mbert/config.yaml`](./exps/cl_syntactic_diff_mbert/config.yaml) and the config file for measurement [`exps/cl_syntactic_diff_mbert/syndiff_cfg.yaml`](./exps/cl_syntactic_diff_mbert/syndiff_cfg.yaml).
+  - Set the pair of language for measurement (`lang1` and `lang2`) in [`exps/cl_syntactic_diff_mbert/config.yaml`](./exps/cl_syntactic_diff_mbert/config.yaml), together with the corpora needed for measurement (`corpora`) in [`exps/cl_syntactic_diff_mbert/syndiff_cfg.yaml`](./exps/cl_syntactic_diff_mbert/syndiff_cfg.yaml). The default languages are set to English (en) and Spanish (es).
+  - Set the layer to use in [`exps/cl_syntactic_diff_mbert/syndiff_cfg.yaml`](./exps/cl_syntactic_diff_mbert/syndiff_cfg.yaml). The default is set to layer 7.
+
+- Compute the syntactic difference between a pair of languages by running
+      
+      python -m exps.cl_syntactic_diff_mbert.run compute_syndiff
+
+
+
+[2023-07-31] Probing mBERT for grammatical relations.
 
 - Code is available at [`exps/cl_syntactic_diff_mbert`](./exps/cl_syntactic_diff_mbert).
 
@@ -46,7 +63,7 @@ Our primary objective is to enhance the efficiency of implementing deep learning
       python -m exps.cl_syntactic_diff_mbert.run probe
 
 
-[2023-07-19] **NEW**: Zero-shot cross-lingual dependency parsing with Multilingual BERT.
+[2023-07-19] Zero-shot cross-lingual dependency parsing with Multilingual BERT.
 
 - Code is available at [`exps/cl_syntactic_diff_mbert`](./exps/cl_syntactic_diff_mbert).
 

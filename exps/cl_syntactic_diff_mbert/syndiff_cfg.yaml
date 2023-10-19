@@ -1,0 +1,236 @@
+exp_name: "mbert-syntactic-diff"
+
+pad_head_id: -1
+pad_label_id: -1
+
+transform:
+  max_len: 128
+
+verbose: true  # whether to log the accuracy during probing
+delete_hdf5_after_probing: true  # whether to delete the `hdf5_file` where embeddings are saved
+
+maxsize: 5000
+maxsamples: 5000
+ot_entreg: 1.0e-2
+inner_ot_entreg: 1.0e-2
+
+corpus:
+  upos_values: &upos_values [
+    "ADJ", "ADP", "ADV", "AUX", "CCONJ", "DET", "INTJ", "NOUN", "NUM", "PART", "PRON", "PROPN",
+    "PUNCT", "SCONJ", "SYM", "VERB", "X"
+  ]
+  deprel_values: &deprel_values [
+    "acl", "advcl", "advmod", "amod", "appos", "aux", "case", "cc", "ccomp", "clf", "compound",
+    "conj", "cop", "csubj", "dep", "det", "discourse", "dislocated", "expl", "fixed", "flat", "goeswith",
+    "iobj", "list", "mark", "nmod", "nsubj", "nummod", "obj", "obl", "orphan", "parataxis", "punct",
+    "reparandum", "root", "vocative", "xcomp"
+  ]
+
+
+model:
+  name: "Measuring Cross-Linguistic Syntactic Difference in Multilingual BERT"
+  encoder:
+    name: "bert-base-multilingual-cased"
+    finetune: false
+    max_seq_len: 128
+    freeze_layer: -1
+    n_layers: 12
+    embedding:
+      layer: 7  # which layer of mBERT to be probed (for grammatical relations)
+    predict_batch_size: 8
+
+  task:
+    name: "dependency_parsing"
+    upos_values: *upos_values
+    deprel_values: *deprel_values
+    embedding_dim: 768
+    parser_pos_dim: 100
+    parser_rel_dim: 128
+    parser_arc_dim: 512
+    parser_use_pos: false
+    parser_predict_pos: true
+    parser_use_predict_pos: true
+    parser_predict_rel_label: true
+    parser_dropout: 0.33
+    ignore_pos_punct: true
+
+
+corpus_train_ar: &train_ar {lang: "ar", genre: "PADT", split: "train"}
+corpus_train_bg: &train_bg {lang: "bg", genre: "BTB", split: "train"}
+corpus_train_ca: &train_ca {lang: "ca", genre: "AnCora", split: "train"}
+corpus_train_cs: &train_cs {lang: "cs", genre: "PDT", split: "train"}
+corpus_train_de: &train_de {lang: "de", genre: "GSD", split: "train"}
+corpus_train_el: &train_el {lang: "el", genre: "GDT", split: "train"}
+corpus_train_en: &train_en {lang: "en", genre: "EWT", split: "train"}
+corpus_train_es: &train_es {lang: "es", genre: "GSD", split: "train"}
+corpus_train_et: &train_et {lang: "et", genre: "EDT", split: "train"}
+corpus_train_fa: &train_fa {lang: "fa", genre: "PerDT", split: "train"}
+corpus_train_fi: &train_fi {lang: "fi", genre: "TDT", split: "train"}
+corpus_train_fr: &train_fr {lang: "fr", genre: "GSD", split: "train"}
+corpus_train_he: &train_he {lang: "he", genre: "HTB", split: "train"}
+corpus_train_hi: &train_hi {lang: "hi", genre: "HDTB", split: "train"}
+corpus_train_hu: &train_hu {lang: "hu", genre: "Szeged", split: "train"}
+corpus_train_it: &train_it {lang: "it", genre: "ISDT", split: "train"}  # "VIT"
+corpus_train_ja: &train_ja {lang: "ja", genre: "GSD", split: "train"}
+corpus_train_ko: &train_ko {lang: "ko", genre: "Kaist", split: "train"}
+corpus_train_lv: &train_lv {lang: "lv", genre: "LVTB", split: "train"}
+corpus_train_nl: &train_nl {lang: "nl", genre: "Alpino", split: "train"}
+corpus_train_pl: &train_pl {lang: "pl", genre: "PDB", split: "train"}
+corpus_train_pt: &train_pt {lang: "pt", genre: "GSD", split: "train"}
+corpus_train_ro: &train_ro {lang: "ro", genre: "RRT", split: "train"}
+corpus_train_ru: &train_ru {lang: "ru", genre: "GSD", split: "train"}
+corpus_train_ta: &train_ta {lang: "ta", genre: "TTB", split: "train"}
+corpus_train_tr: &train_tr {lang: "tr", genre: "BOUN", split: "train"}
+corpus_train_ur: &train_ur {lang: "ur", genre: "UDTB", split: "train"}
+corpus_train_uk: &train_vi {lang: "vi", genre: "VTB", split: "train"}
+corpus_train_zh: &train_zh {lang: "zh", genre: "GSDSimp", split: "train"}
+
+corpus_dev_ar: &dev_ar {lang: "ar", genre: "PADT", split: "dev"}
+corpus_dev_bg: &dev_bg {lang: "bg", genre: "BTB", split: "dev"}
+corpus_dev_ca: &dev_ca {lang: "ca", genre: "AnCora", split: "dev"}
+corpus_dev_cs: &dev_cs {lang: "cs", genre: "PDT", split: "dev"}
+corpus_dev_de: &dev_de {lang: "de", genre: "GSD", split: "dev"}
+corpus_dev_el: &dev_el {lang: "el", genre: "GDT", split: "dev"}
+corpus_dev_en: &dev_en {lang: "en", genre: "EWT", split: "dev"}
+corpus_dev_es: &dev_es {lang: "es", genre: "GSD", split: "dev"}
+corpus_dev_et: &dev_et {lang: "et", genre: "EDT", split: "dev"}
+corpus_dev_fa: &dev_fa {lang: "fa", genre: "PerDT", split: "dev"}
+corpus_dev_fi: &dev_fi {lang: "fi", genre: "TDT", split: "dev"}
+corpus_dev_fr: &dev_fr {lang: "fr", genre: "GSD", split: "dev"}
+corpus_dev_he: &dev_he {lang: "he", genre: "HTB", split: "dev"}
+corpus_dev_hi: &dev_hi {lang: "hi", genre: "HDTB", split: "dev"}
+corpus_dev_hu: &dev_hu {lang: "hu", genre: "Szeged", split: "dev"}
+corpus_dev_it: &dev_it {lang: "it", genre: "ISDT", split: "dev"}  # "VIT"
+corpus_dev_ja: &dev_ja {lang: "ja", genre: "GSD", split: "dev"}
+corpus_dev_ko: &dev_ko {lang: "ko", genre: "Kaist", split: "dev"}
+corpus_dev_lv: &dev_lv {lang: "lv", genre: "LVTB", split: "dev"}
+corpus_dev_nl: &dev_nl {lang: "nl", genre: "Alpino", split: "dev"}
+corpus_dev_pl: &dev_pl {lang: "pl", genre: "PDB", split: "dev"}
+corpus_dev_pt: &dev_pt {lang: "pt", genre: "GSD", split: "dev"}
+corpus_dev_ro: &dev_ro {lang: "ro", genre: "RRT", split: "dev"}
+corpus_dev_ru: &dev_ru {lang: "ru", genre: "GSD", split: "dev"}
+corpus_dev_ta: &dev_ta {lang: "ta", genre: "TTB", split: "dev"}
+corpus_dev_tr: &dev_tr {lang: "tr", genre: "BOUN", split: "dev"}
+corpus_dev_ur: &dev_ur {lang: "ur", genre: "UDTB", split: "dev"}
+corpus_dev_uk: &dev_vi {lang: "vi", genre: "VTB", split: "dev"}
+corpus_dev_zh: &dev_zh {lang: "zh", genre: "GSDSimp", split: "dev"}
+
+corpus_test_ar: &test_ar {lang: "ar", genre: "PADT", split: "test"}
+corpus_test_bg: &test_bg {lang: "bg", genre: "BTB", split: "test"}
+corpus_test_ca: &test_ca {lang: "ca", genre: "AnCora", split: "test"}
+corpus_test_cs: &test_cs {lang: "cs", genre: "PDT", split: "test"}
+corpus_test_de: &test_de {lang: "de", genre: "GSD", split: "test"}
+corpus_test_el: &test_el {lang: "el", genre: "GDT", split: "test"}
+corpus_test_en: &test_en {lang: "en", genre: "EWT", split: "test"}
+corpus_test_es: &test_es {lang: "es", genre: "GSD", split: "test"}
+corpus_test_et: &test_et {lang: "et", genre: "EDT", split: "test"}
+corpus_test_fa: &test_fa {lang: "fa", genre: "PerDT", split: "test"}
+corpus_test_fi: &test_fi {lang: "fi", genre: "TDT", split: "test"}
+corpus_test_fr: &test_fr {lang: "fr", genre: "GSD", split: "test"}
+corpus_test_he: &test_he {lang: "he", genre: "HTB", split: "test"}
+corpus_test_hi: &test_hi {lang: "hi", genre: "HDTB", split: "test"}
+corpus_test_hu: &test_hu {lang: "hu", genre: "Szeged", split: "test"}
+corpus_test_it: &test_it {lang: "it", genre: "VIT", split: "test"}  # "ISDT"
+corpus_test_ja: &test_ja {lang: "ja", genre: "GSD", split: "test"}
+corpus_test_ko: &test_ko {lang: "ko", genre: "Kaist", split: "test"}
+corpus_test_lv: &test_lv {lang: "lv", genre: "LVTB", split: "test"}
+corpus_test_nl: &test_nl {lang: "nl", genre: "Alpino", split: "test"}
+corpus_test_pl: &test_pl {lang: "pl", genre: "PDB", split: "test"}
+corpus_test_pt: &test_pt {lang: "pt", genre: "GSD", split: "test"}
+corpus_test_ro: &test_ro {lang: "ro", genre: "RRT", split: "test"}
+corpus_test_ru: &test_ru {lang: "ru", genre: "GSD", split: "test"}
+corpus_test_ta: &test_ta {lang: "ta", genre: "TTB", split: "test"}
+corpus_test_tr: &test_tr {lang: "tr", genre: "BOUN", split: "test"}
+corpus_test_ur: &test_ur {lang: "ur", genre: "UDTB", split: "test"}
+corpus_test_uk: &test_vi {lang: "vi", genre: "VTB", split: "test"}
+corpus_test_zh: &test_zh {lang: "zh", genre: "GSDSimp", split: "test"}
+
+
+corpora:  # The UD Treebanks used for probing (in accordance with the `probe_lang` set in the main config file)
+  # - *train_ar
+  # - *dev_ar
+  # - *test_ar
+  # - *train_bg
+  # - *dev_bg
+  # - *test_bg
+  # - *train_ca
+  # - *dev_ca
+  # - *test_ca
+  # - *train_cs
+  # - *dev_cs
+  # - *test_cs
+  # - *train_de
+  # - *dev_de
+  # - *test_de
+  # - *train_el
+  # - *dev_el
+  # - *test_el
+  - *train_en
+  # - *dev_en
+  # - *test_en
+  - *train_es
+  # - *dev_es
+  # - *test_es
+  # - *train_et
+  # - *dev_et
+  # - *test_et
+  # - *train_fa
+  # - *dev_fa
+  # - *test_fa
+  # - *train_fi
+  # - *dev_fi
+  # - *test_fi
+  # - *train_fr
+  # - *dev_fr
+  # - *test_fr
+  # - *train_he
+  # - *dev_he
+  # - *test_he
+  # - *train_hi
+  # - *dev_hi
+  # - *test_hi
+  # - *train_hu
+  # - *dev_hu
+  # - *test_hu
+  # - *train_it
+  # - *dev_it
+  # - *test_it
+  # - *train_ja
+  # - *dev_ja
+  # - *test_ja
+  # - *train_ko
+  # - *dev_ko
+  # - *test_ko
+  # - *train_lv
+  # - *dev_lv
+  # - *test_lv
+  # - *train_nl
+  # - *dev_nl
+  # - *test_nl
+  # - *train_pl
+  # - *dev_pl
+  # - *test_pl
+  # - *train_pt
+  # - *dev_pt
+  # - *test_pt
+  # - *train_ro
+  # - *dev_ro
+  # - *test_ro
+  # - *train_ru
+  # - *dev_ru
+  # - *test_ru
+  # - *train_ta
+  # - *dev_ta
+  # - *test_ta
+  # - *train_tr
+  # - *dev_tr
+  # - *test_tr
+  # - *train_ur
+  # - *dev_ur
+  # - *test_ur
+  # - *train_vi
+  # - *dev_vi
+  # - *test_vi
+  # - *train_zh
+  # - *dev_zh
+  # - *test_zh

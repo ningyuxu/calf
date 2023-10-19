@@ -8,6 +8,9 @@ tgt_langs: [
 
 probe_lang: "en"  # the language used for the probing experiment
 
+lang1: "en"  # one of the languages within the language pair for which the syntactic difference is computed
+lang2: "es"  # the other of the languages within the language pair for which the syntactic difference is computed
+
 gpu_mem_threshold: 4096
 nproc: 1  # number of gpus to be used, use `cpu` if set to 0
 use_available_gpu: true
